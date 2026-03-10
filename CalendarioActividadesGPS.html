@@ -1,331 +1,479 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calendario Grupo Pequeño Rescatados por Gracia</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <title>Calendario GPS Rescatados</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f4f4;
-      padding: 1rem;
+    :root { 
+      /* Paleta Moderna */
+      --primary: #4f46e5; /* Indigo vibrante */
+      --primary-hover: #4338ca;
+      --secondary: #0ea5e9; /* Cyan para acentos/degradados */
+      --bg: #f8fafc; /* Fondo general ultra claro */
+      --surface: #ffffff; /* Fondo de tarjetas */
+      --text-main: #0f172a; /* Texto principal oscuro */
+      --text-muted: #64748b; /* Texto secundario gris */
+      --border: #e2e8f0; 
+      
+      /* Sombras modernas (suaves y en capas) */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-primary: 0 10px 15px -3px rgba(79, 70, 229, 0.2);
+      
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 1rem;
+    * { box-sizing: border-box; }
+    
+    body { 
+      margin: 0; 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: var(--bg); 
+      padding: 2rem 1rem; 
+      color: var(--text-main); 
+      line-height: 1.5;
     }
 
-    h1 {
-      margin: 0.5rem 0;
-      color: #0077cc;
-    }
-
-    .controls {
+    /* Encabezado Moderno */
+    header { 
+      text-align: center; 
+      margin-bottom: 2rem; 
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      gap: 1rem;
+      gap: 0.25rem;
+    }
+    header h1:first-child { 
+      margin: 0;
+      font-size: 0.875rem; 
+      color: var(--text-muted); 
+      text-transform: uppercase; 
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    header h1:last-child { 
+      margin: 0;
+      font-size: 2.5rem; 
+      font-weight: 800; 
+      /* Texto con Degradado */
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+    
+    /* Contenedor de Controles Centrado tipo "Píldora" */
+    .controls-wrapper {
+      display: flex;
+      justify-content: center;
       margin-bottom: 1rem;
     }
-
-    .calendar-picker {
-      font-size: 1rem;
-      max-width: 300px;
+    .controls { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      background: var(--surface);
+      padding: 0.5rem;
+      border-radius: 100px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
     }
 
-    .controls button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background-color: #0077cc;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .controls button:hover {
-      background-color: #005fa3;
-    }
-
-    .week-range {
-      text-align: center;
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin: 1rem 0;
-      color: #333;
-    }
-
-    .calendar {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .day-group {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
-
-    .date-header {
-      background-color: #0077cc;
-      color: #fff;
-      padding: 0.75rem 1rem;
-      font-weight: bold;
-    }
-
-    /* Tarjeta: imagen a la izquierda, texto a la derecha */
-    .activity {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      /* miniatura | contenido */
-      gap: 1rem;
-      padding: 1rem;
-      border-top: 1px solid #eee;
+    .controls button { 
+      display: flex;
       align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
+      font-size: 1.2rem;
+      background: var(--surface); 
+      color: var(--text-main); 
+      border: 1px solid transparent; 
+      border-radius: 50%; 
+      cursor: pointer; 
+      transition: var(--transition); 
+    }
+    .controls button:hover:not(:disabled) { 
+      background: var(--bg);
+      color: var(--primary);
+      transform: scale(1.05);
+    }
+    .controls button:disabled { 
+      color: #cbd5e1; 
+      cursor: not-allowed; 
+      opacity: 0.5;
+    }
+    
+    .week-select-wrapper { 
+      position: relative; 
+      min-width: 250px;
+    }
+    .week-select-wrapper::after { 
+      content: '▾'; 
+      position: absolute; 
+      right: 16px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      color: var(--text-muted); 
+      pointer-events: none; 
+      font-size: 1.2rem; 
+    }
+    .week-select { 
+      appearance: none; 
+      width: 100%; 
+      padding: 0.65rem 2.5rem 0.65rem 1.5rem; 
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: center;
+      border: none; 
+      background: transparent; 
+      color: var(--text-main); 
+      outline: none; 
+      cursor: pointer; 
+      border-radius: 100px;
+      transition: var(--transition);
+    }
+    .week-select:hover {
+      background: var(--bg);
+    }
+    .week-select:focus { 
+      box-shadow: inset 0 0 0 2px var(--primary); 
+    }
+    
+    .week-range { 
+      text-align: center; 
+      font-size: 0.95rem; 
+      font-weight: 500; 
+      margin: 0 0 2rem 0; 
+      color: var(--text-muted); 
+    }
+    
+    /* Calendario y Tarjetas */
+    .calendar { 
+      display: grid; 
+      gap: 1.5rem; 
+      max-width: 800px; 
+      margin: 0 auto; 
+    }
+    .day-group { 
+      background: var(--surface); 
+      border-radius: var(--radius-lg); 
+      box-shadow: var(--shadow-sm); 
+      border: 1px solid var(--border);
+      overflow: hidden; 
+      transition: var(--transition); 
+    }
+    .day-group:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    
+    /* Destacado de "Hoy" Moderno */
+    .day-group.today-highlight {
+      border: 2px solid var(--primary);
+      box-shadow: var(--shadow-primary);
+    }
+    .today-badge {
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.7rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .activity img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
+    .date-header { 
+      background: var(--surface); 
+      color: var(--text-main); 
+      padding: 1rem 1.25rem; 
+      font-weight: 700; 
+      font-size: 1.1rem;
+      text-transform: capitalize; 
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .activity { 
+      display: grid; 
+      grid-template-columns: 88px 1fr; 
+      gap: 1.25rem; 
+      padding: 1.25rem; 
+      align-items: center; 
+    }
+    .activity:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+    .activity img { 
+      width: 88px; 
+      height: 88px; 
+      object-fit: cover; 
+      border-radius: var(--radius-md); 
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .activity:hover img {
+      transform: scale(1.03);
+    }
+    
+    .activity-title { 
+      font-weight: 700; 
+      font-size: 1.05rem;
+      margin-bottom: 0.35rem; 
+      color: var(--text-main);
+    }
+    .activity-description { 
+      color: var(--text-muted); 
+      font-size: 0.95rem;
+      line-height: 1.5; 
+    }
+    
+    /* Enlaces más limpios */
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+    a:hover {
+      color: var(--secondary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
 
-    /* En móvil: miniatura más pequeña pero sigue a la izquierda */
+    .empty-week { 
+      background: transparent; 
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg); 
+      padding: 3rem 1.25rem; 
+      text-align: center; 
+      color: var(--text-muted); 
+      max-width: 800px; 
+      margin: 0 auto; 
+      font-weight: 500;
+    }
+    
     @media (max-width: 600px) {
-      .activity {
-        grid-template-columns: 56px 1fr;
-        gap: 0.75rem;
-        padding: 0.75rem 1rem;
+      .activity { 
+        grid-template-columns: 64px 1fr; 
+        gap: 1rem; 
+        padding: 1rem; 
       }
-
-      .activity img {
-        width: 56px;
-        height: 56px;
+      .activity img { 
+        width: 64px; 
+        height: 64px; 
       }
-
-      .activity-title {
-        font-size: 1rem;
+      header h1:last-child {
+        font-size: 2rem;
       }
-
-      .activity-description {
-        font-size: 0.9rem;
+      .controls {
+        flex-wrap: wrap;
+        border-radius: var(--radius-lg);
       }
-    }
-
-    .has-activity {
-      background-color: #ffcc00 !important;
-      border-radius: 50%;
-      font-weight: bold;
-      color: black !important;
-    }
-
-    .selected-week {
-      background-color: #66b3ff !important;
-      color: white !important;
-      border-radius: 50%;
-      font-weight: bold;
     }
   </style>
 </head>
-
 <body>
-
   <header>
     <h1>Calendario de Actividades</h1>
-    <h1>GPS Rescatados por Gracia</h1>
+    <h1>GPS Rescatados</h1>
   </header>
-
-  <div class="controls">
-    <button onclick="changeWeek(-1)">⬅ Semana anterior</button>
-    <div id="flatpickr" class="calendar-picker"></div>
-    <button onclick="changeWeek(1)">Semana siguiente ➡</button>
+  
+  <div class="controls-wrapper">
+    <div class="controls">
+      <button id="prevWeekBtn" onclick="changeWeek(-1)" aria-label="Semana anterior">⬅</button>
+      <div class="week-select-wrapper">
+        <select id="weekSelect" class="week-select" aria-label="Seleccionar semana"></select>
+      </div>
+      <button id="nextWeekBtn" onclick="changeWeek(1)" aria-label="Semana siguiente">➡</button>
+    </div>
   </div>
-
+  
   <div class="week-range" id="weekRange"></div>
   <div class="calendar" id="calendarContainer"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
   <script>
     const activities = [
-      { date: '2025-04-19', title: '10:00 - Casa Iglesia Campo', description: 'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image: 'Imagenes/LogoIglesia.png' },
-      { date: '2025-06-07', title: '10:00 - Casa Iglesia Campo', description: 'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image: 'Imagenes/LogoIglesia.png' },
-      { date: '2025-06-27', title: '20:00 - Junta semanal', description: 'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-07-03', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-07-10', title: '20:00 - Junta semanal', description: 'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-07-17', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-07-24', title: '20:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-07-31', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-08-02', title: '09:45 - Iglesia Nuevo Mundo', description: 'Dirección: <a href="https://maps.app.goo.gl/GZjX2hrM2eY8m1CCA" target="_blank">Managua Nte. 3491, Temuco</a>', image: 'Imagenes/LogoIglesia.png' },
-      { date: '2025-08-07', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-08-14', title: '20:00 - Junta semanal', description: 'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-08-21', title: '20:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image: 'Imagenes/CasaIglesia.jpg' },
-	    { date: '2025-08-23', title: 'Iglesia en Lumaco', description: '- Iglesia Lumaco. Dirección: <a href="https://maps.app.goo.gl/MYSHWxi7pzK5s5w77" target="_blank">Antonio Matta 229</a><br>- Almuerzo en <a href="https://maps.app.goo.gl/Qu45BKCp1pAo8eJKA" target="_blank">Capitán Pastene</a>.<br>- Culto Joven en Capitán Pastene. (en teoría XD)', image: 'Imagenes/LogoIglesia.png' },
-	    { date: '2025-08-28', title: '20:00 - Junta semanal', description: 'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-09-04', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br><b>Llevar \"El Kilo\"</b><br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-09-06', title: '09:30 - Iglesia Cholchol', description: 'Sermón y Almuerzo<br>Dirección: <a href="https://maps.app.goo.gl/E63LZB4MPMJLij8f6" target="_blank">Teodoro Schmidt 35</a>', image: 'Imagenes/LogoIglesia.png' },
-      { date: '2025-09-11', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-09-16', title: '12:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br><b>CUMPLEAÑOS LORE</b><br>Dirección: <a href="https://maps.app.goo.gl/nsdgrL1ooWG5Rs4W7" target="_blank">Casa Campo</a>', image: 'Imagenes/CasaIglesia.jpg' },
-      { date: '2025-09-25', title: '20:00 - Junta semanal', description: 'Casa: Herminio-Edith<br><b>CUMPLEAÑOS EDITH</b><br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image: 'Imagenes/CasaIglesia.jpg' }
+		{ date:'2025-04-19', title:'10:00 - Casa Iglesia Campo', description:'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image:'Imagenes/LogoIglesia.png' },
+		{ date:'2025-06-07', title:'10:00 - Casa Iglesia Campo', description:'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image:'Imagenes/LogoIglesia.png' },
+		{ date:'2025-08-02', title:'09:45 - Iglesia Nuevo Mundo', description:'Dirección: <a href="https://maps.app.goo.gl/GZjX2hrM2eY8m1CCA" target="_blank">Managua Nte. 3491, Temuco</a>', image:'Imagenes/LogoIglesia.png' },
+		{ date:'2025-09-06', title:'09:30 - Iglesia Cholchol', description:'Sermón y Almuerzo<br>Dirección: <a href="https://maps.app.goo.gl/E63LZB4MPMJLij8f6" target="_blank">Teodoro Schmidt 35</a>', image:'Imagenes/LogoIglesia.png' },
+		{ date:'2025-08-23', title:'Iglesia en Lumaco', description:'- Iglesia Lumaco. Dirección: <a href="https://maps.app.goo.gl/MYSHWxi7pzK5s5w77" target="_blank">Antonio Matta 229</a><br>- Almuerzo en <a href="https://maps.app.goo.gl/Qu45BKCp1pAo8eJKA" target="_blank">Capitán Pastene</a>.<br>- Culto Joven en Capitán Pastene. (en teoría XD)', image:'Imagenes/LogoIglesia.png' },
+		{ date:'2025-06-27', title:'20:00 - Junta semanal', description:'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-07-03', title:'20:00 - Junta semanal', description:'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-07-10', title:'20:00 - Junta semanal', description:'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-07-17', title:'20:00 - Junta semanal', description:'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-07-24', title:'20:00 - Junta semanal', description:'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-07-31', title:'20:00 - Junta semanal', description:'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-08-07', title:'20:00 - Junta semanal', description:'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-08-14', title:'20:00 - Junta semanal', description:'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-08-21', title:'20:00 - Junta semanal', description:'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-08-28', title:'20:00 - Junta semanal', description:'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-09-04', title:'20:00 - Junta semanal', description:'Casa: Ladino-Huenulaf<br><b>Llevar "El Kilo"</b><br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-09-11', title:'20:00 - Junta semanal', description:'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-09-16', title:'12:00 - Junta semanal', description:'Casa: Pranao-Espinoza<br><b>CUMPLEAÑOS LORE</b><br>Dirección: <a href="https://maps.app.goo.gl/nsdgrL1ooWG5Rs4W7" target="_blank">Casa Campo</a>', image:'Imagenes/CasaIglesia.jpg' },
+		{ date:'2025-09-25', title:'20:00 - Junta semanal', description:'Casa: Herminio-Edith<br><b>CUMPLEAÑOS EDITH</b><br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image:'Imagenes/CasaIglesia.jpg' }
     ];
 
-  //,{ date: '2025-08-21', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' }
-  // Pranao Campo: https://maps.app.goo.gl/nsdgrL1ooWG5Rs4W7
-	// <a href="https://maps.app.goo.gl/Qu45BKCp1pAo8eJKA" target="_blank">Capitán Pastene</a>
-
-
+    const weekSelect = document.getElementById('weekSelect');
+    const prevWeekBtn = document.getElementById('prevWeekBtn');
+    const nextWeekBtn = document.getElementById('nextWeekBtn');
+    
     let currentDate = new Date();
-    const activityDates = activities.map(a => a.date);
+    let availableWeeks = [];
 
-    flatpickr("#flatpickr", {
-      defaultDate: currentDate,
-      locale: { ...flatpickr.l10ns.es, firstDayOfWeek: 0 }, // ✅ domingo primero
-      inline: true,
-      disableMobile: true,
-      onChange: function (selectedDates, _, fp) {
-        if (selectedDates.length > 0) {
-          currentDate = selectedDates[0];
-          updateCalendar();
-        }
-        highlightActivityDays(fp);
-        highlightSelectedWeek(fp, currentDate);
-      },
-      onReady: function (_, __, fp) {
-        highlightActivityDays(fp);
-        highlightSelectedWeek(fp, currentDate);
-      },
-      onMonthChange: function (_, __, fp) {
-        highlightActivityDays(fp);
-        highlightSelectedWeek(fp, currentDate);
-      },
-      onYearChange: function (_, __, fp) {
-        highlightActivityDays(fp);
-        highlightSelectedWeek(fp, currentDate);
-      }
-    });
+    function getStartOfWeek(date) { 
+      const d = new Date(date); 
+      d.setHours(0,0,0,0); 
+      const day = d.getDay(); 
+      d.setDate(d.getDate() - day); 
+      return d; 
+    }
 
-    function highlightActivityDays(fp) {
-      const days = fp.days.childNodes;
-      days.forEach(dayElem => {
-        const dateStr = dayElem.dateObj ? formatDate(dayElem.dateObj) : null;
-        dayElem.classList.remove("has-activity");
-        if (dateStr && activityDates.includes(dateStr)) {
-          dayElem.classList.add("has-activity");
-        }
+    function formatDate(date) { 
+      const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0'); 
+      return `${y}-${m}-${d}`; 
+    }
+    
+    function formatDDMMYYYY(date) {
+      const d = String(date.getDate()).padStart(2, '0');
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const y = date.getFullYear();
+      return `${d}/${m}/${y}`;
+    }
+
+    function formatReadableDate(date) { 
+      return date.toLocaleDateString('es-CL',{ weekday:'long', year:'numeric', month:'long', day:'numeric' }); 
+    }
+
+    function buildWeekOptions() {
+      const weekKeys = new Set(activities.map(a => formatDate(getStartOfWeek(new Date(`${a.date}T12:00:00`)))));
+      weekKeys.add(formatDate(getStartOfWeek(new Date())));
+      
+      availableWeeks = Array.from(weekKeys).map(s => new Date(`${s}T12:00:00`)).sort((a,b) => a-b);
+      weekSelect.innerHTML = '';
+      
+      availableWeeks.forEach(weekStart => {
+        const weekEnd = new Date(weekStart); 
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        const option = document.createElement('option');
+        option.value = formatDate(weekStart);
+        option.textContent = `${formatDDMMYYYY(weekStart)} - ${formatDDMMYYYY(weekEnd)}`;
+        weekSelect.appendChild(option);
       });
-    }
-
-    function highlightSelectedWeek(fp, baseDate) {
-      const start = getStartOfWeek(baseDate);
-      const end = new Date(start);
-      end.setDate(start.getDate() + 6);
-
-      const days = fp.days.childNodes;
-      days.forEach(dayElem => {
-        const date = dayElem.dateObj;
-        dayElem.classList.remove("selected-week");
-        if (date >= start && date <= end) {
-          dayElem.classList.add("selected-week");
-        }
-      });
-    }
-
-    function getStartOfWeek(date) {
-      const d = new Date(date);
-      const day = d.getDay(); // 0 = domingo
-      const diff = d.getDate() - day; // domingo como inicio
-      return new Date(d.setDate(diff));
-    }
-
-    /*function formatDate(date) {
-      return date.toISOString().split('T')[0];
-    }
-    */
-    function formatDate(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
-
-    function formatReadableDate(date) {
-      return date.toLocaleDateString('es-CL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    function formatShortDate(date) {
-      return date.toLocaleDateString('es-CL', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 
     function updateWeekRange() {
-      const start = getStartOfWeek(currentDate);
-      const end = new Date(start);
+      const start = getStartOfWeek(currentDate); 
+      const end = new Date(start); 
       end.setDate(start.getDate() + 6);
-      document.getElementById('weekRange').textContent =
-        `Semana: ${formatShortDate(start)} – ${formatShortDate(end)}`;
+      //document.getElementById('weekRange').textContent = `${formatDDMMYYYY(start)} - ${formatDDMMYYYY(end)}`;
+    }
+
+    function updateWeekButtons() {
+      const key = formatDate(getStartOfWeek(currentDate));
+      const index = availableWeeks.findIndex(w => formatDate(w) === key);
+      prevWeekBtn.disabled = index <= 0;
+      nextWeekBtn.disabled = index === -1 || index >= availableWeeks.length - 1;
+    }
+
+    function syncWeekSelect() { 
+      weekSelect.value = formatDate(getStartOfWeek(currentDate)); 
+      updateWeekButtons(); 
     }
 
     function updateCalendar() {
       const startOfWeek = getStartOfWeek(currentDate);
       const calendar = document.getElementById('calendarContainer');
+      const todayStr = formatDate(new Date()); 
+      
       calendar.innerHTML = '';
       updateWeekRange();
-
+      syncWeekSelect();
+      
+      let hasActivities = false;
       for (let i = 0; i < 7; i++) {
-        const day = new Date(startOfWeek);
+        const day = new Date(startOfWeek); 
         day.setDate(startOfWeek.getDate() + i);
         const dayStr = formatDate(day);
         const dayActivities = activities.filter(a => a.date === dayStr);
-
+        
         if (dayActivities.length > 0) {
-          const group = document.createElement('div');
+          hasActivities = true;
+          const group = document.createElement('div'); 
           group.className = 'day-group';
+          
+          if (dayStr === todayStr) {
+            group.classList.add('today-highlight');
+          }
+          
+          const header = document.createElement('div'); 
+          header.className = 'date-header'; 
+          
+          const dateText = document.createElement('span');
+          dateText.textContent = formatReadableDate(day);
+          header.appendChild(dateText);
 
-          const header = document.createElement('div');
-          header.className = 'date-header';
-          header.textContent = formatReadableDate(day);
+          if (dayStr === todayStr) {
+            const badge = document.createElement('span');
+            badge.className = 'today-badge';
+            badge.textContent = 'Hoy';
+            header.appendChild(badge);
+          }
+
           group.appendChild(header);
-
-          const activityContainer = document.createElement('div');
+          
+          const activityContainer = document.createElement('div'); 
           activityContainer.className = 'activities';
-
+          
           dayActivities.forEach(a => {
-            const act = document.createElement('div');
+            const act = document.createElement('div'); 
             act.className = 'activity';
-            act.innerHTML = `
-            <img src="${a.image}" alt="${a.title}">
-            <div class="activity-info">
-              <div class="activity-title">${a.title}</div>
-              <div class="activity-description">${a.description}</div>
-            </div>
-          `;
+            act.innerHTML = `<img src="${a.image}" alt="${a.title}"><div class="activity-info"><div class="activity-title">${a.title}</div><div class="activity-description">${a.description}</div></div>`;
             activityContainer.appendChild(act);
           });
-
-          group.appendChild(activityContainer);
+          
+          group.appendChild(activityContainer); 
           calendar.appendChild(group);
         }
+      }
+      if (!hasActivities) {
+        const empty = document.createElement('div'); 
+        empty.className = 'empty-week'; 
+        empty.textContent = 'No hay actividades registradas para esta semana.'; 
+        calendar.appendChild(empty);
       }
     }
 
     function changeWeek(offset) {
-      currentDate.setDate(currentDate.getDate() + offset * 7);
+      const key = formatDate(getStartOfWeek(currentDate));
+      const idx = availableWeeks.findIndex(w => formatDate(w) === key);
+      const nextIdx = idx + offset;
+      if (nextIdx < 0 || nextIdx >= availableWeeks.length) return;
+      currentDate = new Date(availableWeeks[nextIdx]);
       updateCalendar();
-      const fp = document.querySelector("#flatpickr")._flatpickr;
-      fp.setDate(currentDate, true);
-      highlightActivityDays(fp);
-      highlightSelectedWeek(fp, currentDate);
     }
 
-    updateCalendar();
+    weekSelect.addEventListener('change', function() { 
+      currentDate = new Date(`${this.value}T12:00:00`); 
+      updateCalendar(); 
+    });
+
+    function init() {
+      buildWeekOptions();
+      currentDate = new Date(getStartOfWeek(new Date()));
+      updateCalendar();
+    }
+    
+    init();
   </script>
-
 </body>
-
 </html>
