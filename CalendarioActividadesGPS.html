@@ -7,16 +7,16 @@
   <style>
     :root { 
       /* Paleta Moderna */
-      --primary: #4f46e5; /* Indigo vibrante */
+      --primary: #4f46e5; 
       --primary-hover: #4338ca;
-      --secondary: #0ea5e9; /* Cyan para acentos/degradados */
-      --bg: #f8fafc; /* Fondo general ultra claro */
-      --surface: #ffffff; /* Fondo de tarjetas */
-      --text-main: #0f172a; /* Texto principal oscuro */
-      --text-muted: #64748b; /* Texto secundario gris */
+      --secondary: #0ea5e9; 
+      --bg: #f8fafc; 
+      --surface: #ffffff; 
+      --text-main: #0f172a; 
+      --text-muted: #64748b; 
       --border: #e2e8f0; 
       
-      /* Sombras modernas (suaves y en capas) */
+      /* Sombras modernas */
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
       --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
@@ -59,14 +59,13 @@
       margin: 0;
       font-size: 2.5rem; 
       font-weight: 800; 
-      /* Texto con Degradado */
       background: linear-gradient(135deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -0.02em;
     }
     
-    /* Contenedor de Controles Centrado tipo "Píldora" */
+    /* Controles */
     .controls-wrapper {
       display: flex;
       justify-content: center;
@@ -173,7 +172,7 @@
       transform: translateY(-2px);
     }
     
-    /* Destacado de "Hoy" Moderno */
+    /* Destacado de "Hoy" */
     .day-group.today-highlight {
       border: 2px solid var(--primary);
       box-shadow: var(--shadow-primary);
@@ -202,17 +201,23 @@
       border-bottom: 1px solid var(--border);
     }
     
+    /* Estilos Generales de Actividad */
     .activity { 
       display: grid; 
-      grid-template-columns: 88px 1fr; 
-      gap: 1.25rem; 
-      padding: 1.25rem; 
       align-items: center; 
+      transition: var(--transition);
     }
     .activity:not(:last-child) {
       border-bottom: 1px solid var(--border);
     }
-    .activity img { 
+
+    /* Actividad Normal (Reunión) - Mantiene su alto normal */
+    .activity.meeting {
+      grid-template-columns: 88px 1fr; 
+      gap: 1.25rem; 
+      padding: 1.25rem; 
+    }
+    .activity.meeting img { 
       width: 88px; 
       height: 88px; 
       object-fit: cover; 
@@ -220,23 +225,55 @@
       box-shadow: var(--shadow-sm);
       transition: var(--transition);
     }
-    .activity:hover img {
+    .activity.meeting:hover img {
       transform: scale(1.03);
     }
-    
-    .activity-title { 
+    .activity.meeting .activity-title { 
       font-weight: 700; 
       font-size: 1.05rem;
       margin-bottom: 0.35rem; 
       color: var(--text-main);
     }
-    .activity-description { 
+    .activity.meeting .activity-description { 
       color: var(--text-muted); 
       font-size: 0.95rem;
       line-height: 1.5; 
     }
+
+    /* --- ESTILOS COMPACTOS PARA CUMPLEAÑOS (Mitad de alto) --- */
+    .activity.birthday {
+      grid-template-columns: 40px 1fr; /* Ícono más pequeño */
+      gap: 1rem;
+      padding: 0.5rem 1.25rem; /* Padding reducido drásticamente */
+      background: linear-gradient(135deg, #fff0f6 0%, #ffe4e6 100%); 
+      border-left: 4px solid #f43f5e; 
+      min-height: 60px; /* Asegura que sea la mitad de los ~128px de la reunión */
+    }
+    .birthday-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: #ffffff;
+      border-radius: 50%;
+      box-shadow: var(--shadow-sm);
+      font-size: 1.2rem; /* Emoji ajustado */
+    }
+    .birthday-title {
+      /* font-weight: 800; */
+      color: #e11d48;
+      font-size: 0.95rem; /* Título más pequeño */
+      margin-bottom: 0.1rem;
+    }
+    .birthday-description {
+      color: #be123c;
+      font-size: 0.85rem; /* Texto más pequeño para ajustar al alto reducido */
+      font-weight: 500;
+      margin: 0;
+    }
+    /* -------------------------------------- */
     
-    /* Enlaces más limpios */
     a {
       color: var(--primary);
       text-decoration: none;
@@ -262,22 +299,15 @@
     }
     
     @media (max-width: 600px) {
-      .activity { 
-        grid-template-columns: 64px 1fr; 
-        gap: 1rem; 
-        padding: 1rem; 
-      }
-      .activity img { 
-        width: 64px; 
-        height: 64px; 
-      }
-      header h1:last-child {
-        font-size: 2rem;
-      }
-      .controls {
-        flex-wrap: wrap;
-        border-radius: var(--radius-lg);
-      }
+      .activity.meeting { grid-template-columns: 64px 1fr; gap: 1rem; padding: 1rem; }
+      .activity.meeting img { width: 64px; height: 64px; }
+      
+      /* Ajuste móvil para cumpleaños aún más compacto */
+      .activity.birthday { grid-template-columns: 36px 1fr; gap: 0.75rem; padding: 0.5rem 1rem; }
+      .birthday-icon-wrapper { width: 36px; height: 36px; font-size: 1rem; }
+      
+      header h1:last-child { font-size: 2rem; }
+      .controls { flex-wrap: wrap; border-radius: var(--radius-lg); }
     }
   </style>
 </head>
@@ -302,25 +332,61 @@
 
   <script>
     const activities = [
-		{ date:'2025-04-19', title:'10:00 - Casa Iglesia Campo', description:'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image:'Imagenes/LogoIglesia.png' },
-		{ date:'2025-06-07', title:'10:00 - Casa Iglesia Campo', description:'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image:'Imagenes/LogoIglesia.png' },
-		{ date:'2025-08-02', title:'09:45 - Iglesia Nuevo Mundo', description:'Dirección: <a href="https://maps.app.goo.gl/GZjX2hrM2eY8m1CCA" target="_blank">Managua Nte. 3491, Temuco</a>', image:'Imagenes/LogoIglesia.png' },
-		{ date:'2025-09-06', title:'09:30 - Iglesia Cholchol', description:'Sermón y Almuerzo<br>Dirección: <a href="https://maps.app.goo.gl/E63LZB4MPMJLij8f6" target="_blank">Teodoro Schmidt 35</a>', image:'Imagenes/LogoIglesia.png' },
-		{ date:'2025-08-23', title:'Iglesia en Lumaco', description:'- Iglesia Lumaco. Dirección: <a href="https://maps.app.goo.gl/MYSHWxi7pzK5s5w77" target="_blank">Antonio Matta 229</a><br>- Almuerzo en <a href="https://maps.app.goo.gl/Qu45BKCp1pAo8eJKA" target="_blank">Capitán Pastene</a>.<br>- Culto Joven en Capitán Pastene. (en teoría XD)', image:'Imagenes/LogoIglesia.png' },
-		{ date:'2025-06-27', title:'20:00 - Junta semanal', description:'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-07-03', title:'20:00 - Junta semanal', description:'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-07-10', title:'20:00 - Junta semanal', description:'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-07-17', title:'20:00 - Junta semanal', description:'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-07-24', title:'20:00 - Junta semanal', description:'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-07-31', title:'20:00 - Junta semanal', description:'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-08-07', title:'20:00 - Junta semanal', description:'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-08-14', title:'20:00 - Junta semanal', description:'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-08-21', title:'20:00 - Junta semanal', description:'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-08-28', title:'20:00 - Junta semanal', description:'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-09-04', title:'20:00 - Junta semanal', description:'Casa: Ladino-Huenulaf<br><b>Llevar "El Kilo"</b><br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-09-11', title:'20:00 - Junta semanal', description:'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-09-16', title:'12:00 - Junta semanal', description:'Casa: Pranao-Espinoza<br><b>CUMPLEAÑOS LORE</b><br>Dirección: <a href="https://maps.app.goo.gl/nsdgrL1ooWG5Rs4W7" target="_blank">Casa Campo</a>', image:'Imagenes/CasaIglesia.jpg' },
-		{ date:'2025-09-25', title:'20:00 - Junta semanal', description:'Casa: Herminio-Edith<br><b>CUMPLEAÑOS EDITH</b><br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image:'Imagenes/CasaIglesia.jpg' }
+        // --- CUMPLEAÑOS ---
+        { date:'2026-03-04', type: 'birthday', title: 'Cumple de Totolilo' },
+        { date:'2026-03-17', type: 'birthday', title: 'Cumple de CocheMiel' },
+        { date:'2026-04-04', type: 'birthday', title: 'Cumple de Edu' },
+		{ date:'2026-04-23', type: 'birthday', title: 'Cumple de Ronald' },
+		{ date:'2026-05-23', type: 'birthday', title: 'Cumple de Angie' },
+		{ date:'2026-05-27', type: 'birthday', title: 'Cumple de Tuni' },
+		{ date:'2026-06-01', type: 'birthday', title: 'Cumple de Pillita linda' },
+		{ date:'2026-06-17', type: 'birthday', title: 'Cumple de Fer' },
+		{ date:'2026-06-23', type: 'birthday', title: 'Cumple de Catita' },
+		{ date:'2026-07-21', type: 'birthday', title: 'Cumple de Jano' },
+		{ date:'2026-09-16', type: 'birthday', title: 'Cumple de Lore' },
+		{ date:'2026-10-20', type: 'birthday', title: 'Cumple de Roci' },
+		{ date:'2026-10-31', type: 'birthday', title: 'Cumple de Nachito' },
+		{ date:'2026-11-04', type: 'birthday', title: 'Cumple de Toñito' },
+		{ date:'2026-11-29', type: 'birthday', title: 'Cumple de Marti' },
+
+		// --- OTROS CUMPLES 
+		//{ date:'2026-04-08', type: 'birthday', title: 'Cumple de Marina' },
+		//{ date:'2026-05-16', type: 'birthday', title: 'Cumple de Martín' },		
+		//{ date:'2026-05-31', type: 'birthday', title: 'Cumple de TataMon' },		
+		//{ date:'2026-07-07', type: 'birthday', title: 'Cumple de Cayusito' },
+		//{ date:'2026-09-02', type: 'birthday', title: 'Cumple de Aldito' },
+		//{ date:'2026-10-26', type: 'birthday', title: 'Cumple de Benito' },
+		//{ date:'2026-12-22', type: 'birthday', title: 'Cumple de Benja' },
+		//{ date:'2026-12-12', type: 'birthday', title: 'Cumple de Cleavens' },
+		//{ date:'2026-12-14', type: 'birthday', title: 'Cumple de Inesita' },
+		
+		// --- VISITAS A IGLESIAS
+		{ date: '2025-04-19', title: '10:00 - Casa Iglesia Campo', description: 'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image: 'Imagenes/LogoIglesia.png' },
+		{ date: '2025-06-07', title: '10:00 - Casa Iglesia Campo', description: 'Dirección: <a href="https://maps.app.goo.gl/mmnZE4x382JHkx7s5" target="_blank">Campo</a>', image: 'Imagenes/LogoIglesia.png' },
+		{ date: '2025-08-02', title: '09:45 - Iglesia Nuevo Mundo', description: 'Dirección: <a href="https://maps.app.goo.gl/GZjX2hrM2eY8m1CCA" target="_blank">Managua Nte. 3491, Temuco</a>', image: 'Imagenes/LogoIglesia.png' },
+		{ date: '2025-08-23', title: 'Iglesia en Lumaco', description: '- Iglesia Lumaco. Dirección: <a href="https://maps.app.goo.gl/MYSHWxi7pzK5s5w77" target="_blank">Antonio Matta 229</a><br>- Almuerzo en <a href="https://maps.app.goo.gl/Qu45BKCp1pAo8eJKA" target="_blank">Capitán Pastene</a>.<br>- Culto Joven en Capitán Pastene. (en teoría XD)', image: 'Imagenes/LogoIglesia.png' },		
+		{ date: '2025-09-06', title: '09:30 - Iglesia Cholchol', description: 'Sermón y Almuerzo<br>Dirección: <a href="https://maps.app.goo.gl/E63LZB4MPMJLij8f6" target="_blank">Teodoro Schmidt 35</a>', image: 'Imagenes/LogoIglesia.png' },
+        // --- REUNIONES 2025
+	
+		{ date: '2025-06-27', title: '20:00 - Junta semanal', description: 'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-07-03', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-07-10', title: '20:00 - Junta semanal', description: 'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-07-17', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-07-24', title: '20:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-07-31', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-08-07', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-08-14', title: '20:00 - Junta semanal', description: 'Casa: Herminio-Edith<br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-08-21', title: '20:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-08-28', title: '20:00 - Junta semanal', description: 'Casa: Jeannete-DonLalo<br>Dirección: <a href="https://maps.app.goo.gl/qFN6LAgqKKdY7W3ZA" target="_blank">Errazuriz 260</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-09-04', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br><b>Llevar \"El Kilo\"</b><br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-09-11', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-09-16', title: '12:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br><b>CUMPLEAÑOS LORE</b><br>Dirección: <a href="https://maps.app.goo.gl/nsdgrL1ooWG5Rs4W7" target="_blank">Casa Campo</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2025-09-25', title: '20:00 - Junta semanal', description: 'Casa: Herminio-Edith<br><b>CUMPLEAÑOS EDITH</b><br>Dirección: <a href="https://maps.app.goo.gl/gAo2Wp883tmpvAUC8" target="_blank">Errazuriz 52</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		
+		// --- REUNIONES 2026
+		{ date: '2026-03-12', title: '20:00 - Junta semanal', description: 'Casa: Ladino-Huenulaf<br>Dirección: <a href="https://maps.app.goo.gl/g8r2ANYva7SvQTqm7" target="_blank">Bernardo OHiggins 577</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2026-03-19', title: '20:00 - Junta semanal', description: 'Casa: Biott-Ladino<br>Dirección: <a href="https://maps.app.goo.gl/BUnEzgeXMgVo5SvH7" target="_blank">Diego Portales 278</a>', image: 'Imagenes/CasaIglesia.jpg' },
+		{ date: '2026-03-26', title: '20:00 - Junta semanal', description: 'Casa: Pranao-Espinoza<br>Dirección: <a href="https://maps.app.goo.gl/qm3spUiUiqXDvHcq5" target="_blank">Diego Portales 032?</a>', image: 'Imagenes/CasaIglesia.jpg' }
     ];
 
     const weekSelect = document.getElementById('weekSelect');
@@ -375,7 +441,7 @@
       const start = getStartOfWeek(currentDate); 
       const end = new Date(start); 
       end.setDate(start.getDate() + 6);
-      //document.getElementById('weekRange').textContent = `${formatDDMMYYYY(start)} - ${formatDDMMYYYY(end)}`;
+      document.getElementById('weekRange').textContent = `${formatDDMMYYYY(start)} - ${formatDDMMYYYY(end)}`;
     }
 
     function updateWeekButtons() {
@@ -436,8 +502,27 @@
           
           dayActivities.forEach(a => {
             const act = document.createElement('div'); 
-            act.className = 'activity';
-            act.innerHTML = `<img src="${a.image}" alt="${a.title}"><div class="activity-info"><div class="activity-title">${a.title}</div><div class="activity-description">${a.description}</div></div>`;
+            
+            if (a.type === 'birthday') {
+              act.className = 'activity birthday';
+              act.innerHTML = `
+                <div class="birthday-icon-wrapper">🎂</div>
+                <div class="activity-info">
+                  <div class="birthday-title">${a.title}</div>
+                  
+                </div>
+              `;
+			  // <div class="birthday-description">${a.description || ''}</div>
+            } else {
+              act.className = 'activity meeting';
+              act.innerHTML = `
+                <img src="${a.image}" alt="${a.title}">
+                <div class="activity-info">
+                  <div class="activity-title">${a.title}</div>
+                  <div class="activity-description">${a.description || ''}</div>
+                </div>
+              `;
+            }
             activityContainer.appendChild(act);
           });
           
